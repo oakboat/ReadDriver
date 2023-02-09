@@ -32,6 +32,10 @@ namespace Hook
 		}
 		_data &= 0x0000ffffffffffff;
 		PWDATA data = reinterpret_cast<PWDATA>(_data);
+		if (!MmIsAddressValid(data))
+		{
+			return 0;
+		}
 		PEPROCESS process = reinterpret_cast<PEPROCESS>(data->process);
 		switch (data->operation)
 		{
@@ -45,6 +49,7 @@ namespace Hook
 			data->process = reinterpret_cast<__int64>(process);
 			return 1;
 		}
+		break;
 		case GET_PROCESS_PEB:
 		{
 			if (!data->process)
@@ -59,6 +64,7 @@ namespace Hook
 			ObReferenceObject(process);
 			return 1;
 		}
+		break;
 		case GET_PROCESS_PEB32:
 		{
 			if (!data->process)
@@ -73,6 +79,7 @@ namespace Hook
 			ObReferenceObject(process);
 			return 1;
 		}
+		break;
 		case READ_BUFFER:
 		{
 			if (!process)
@@ -83,6 +90,7 @@ namespace Hook
 			ObReferenceObject(process);
 			return status;
 		}
+		break;
 		case WRITE_BUFFER:
 		{
 			if (!process)
@@ -93,6 +101,7 @@ namespace Hook
 			ObReferenceObject(process);
 			return status;
 		}
+		break;
 		default:
 			break;
 		}

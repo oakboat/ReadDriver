@@ -1,7 +1,7 @@
 ﻿// ConsoleApplication1.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 #include "Driver.h"
-#include <iostream>
+#include <locale>
 #include <TlHelp32.h>
 #include <chrono>
 
@@ -28,16 +28,16 @@ int main()
 {
 	uint64_t pid = 0;
 	setlocale(LC_ALL, "");
-	SetConsoleTitleW(L"DOSBox");
+	SetConsoleTitleA("DOSBox");
 	pid = GetProcessId(L"steam.exe");
-	wprintf(L"PID: %d\n", pid);
+	printf("PID: %d\n", pid);
 	
 	Driver driver;
 	driver.Init(pid);
 	uint64_t address = driver.GetModuleAddress32(L"steam.exe");
-	wprintf(L"地址: %p\n", address);
+	printf("地址: %p\n", address);
 	
-	wprintf(L"读取: %llx\n", driver.Read<uint64_t>(address));
+	printf("读取: %llx\n", driver.Read<uint64_t>(address));
 	//driver.Write<char>(0x11000000,0x66);
 	//getchar();
 }

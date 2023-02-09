@@ -193,7 +193,7 @@ inline T Driver::Read(uint64_t address)
     T buffer{ 0 };
     DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::READ_BUFFER;
-	w.pid = process;
+	w.process = process;
 	w.address = address;
 	w.size = sizeof(buffer);
 	w.buffer = &buffer;
@@ -210,7 +210,7 @@ inline bool Driver::Write(uint64_t address, T data)
 {
     DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::WRITE_BUFFER;
-	w.pid = process;
+	w.process = process;
 	w.address = address;
 	w.size = sizeof(data);
 	w.buffer = &data;

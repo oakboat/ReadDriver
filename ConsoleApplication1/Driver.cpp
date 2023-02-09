@@ -5,7 +5,19 @@ bool Driver::Init(uint64_t pid)
 {
 	LoadLibraryA("user32.dll");
 	LoadLibraryA("win32u.dll");
-	comm = (DriverDef::Comm_t)GetProcAddress(GetModuleHandleA("win32u.dll"), "NtUserRegisterTouchPadCapable");
+	HMODULE module = GetModuleHandleA("win32u.dll");
+	if (!module)
+	{
+		return false;
+	}
+	char FunctionName[] = { 0x3d, 0x63, 0x44, 0x62, 0x54, 0x61, 0x41, 0x54, 0x56, 0x58, 0x62,
+		0x63, 0x54, 0x61, 0x43, 0x5e, 0x64, 0x52, 0x57, 0x3f,
+		0x50, 0x53, 0x32, 0x50, 0x5f, 0x50, 0x51, 0x5b, 0x54, 0x00 };
+	for (size_t i = 0; i < strlen(FunctionName); i++)
+	{
+		FunctionName[i] += 0x11;
+	}
+	comm = reinterpret_cast<DriverDef::Comm_t>(GetProcAddress(module, FunctionName));
 	if (!comm)
 	{
 		printf("不能获取函数\n");
@@ -29,7 +41,7 @@ uint64_t Driver::GetModuleAddress(const wchar_t* moduleName)
 {
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::GET_PROCESS_PEB;
-	w.pid = process;
+	w.process = process;
 	if (!Call(&w))
 	{
 		printf("获取PEB失败\n");
@@ -69,7 +81,7 @@ uint64_t Driver::GetModuleAddress32(const wchar_t* moduleName)
 {
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::GET_PROCESS_PEB32;
-	w.pid = process;
+	w.process = process;
 	if (!Call(&w))
 	{
 		printf("获取PEB32失败\n");
@@ -109,7 +121,7 @@ bool Driver::ReadBuffer(uint64_t address, void* bufefr, size_t size)
 {
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::READ_BUFFER;
-	w.pid = process;
+	w.process = process;
 	w.address = address;
 	w.size = size;
 	w.buffer = bufefr;
@@ -125,7 +137,7 @@ bool Driver::WriteBuffer(uint64_t address, void* bufefr, size_t size)
 {
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::WRITE_BUFFER;
-	w.pid = process;
+	w.process = process;
 	w.address = address;
 	w.size = size;
 	w.buffer = bufefr;
