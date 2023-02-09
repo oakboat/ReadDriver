@@ -41,7 +41,6 @@ namespace Hook
 		{
 		case GET_PROCESS:
 		{
-			PEPROCESS process;
 			if (!NT_SUCCESS(PsLookupProcessByProcessId((HANDLE)data->pid, &process)))
 			{
 				return 0;
