@@ -113,12 +113,14 @@
   <ItemGroup>
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="Hook.cpp" />
+    <ClCompile Include="LazyImport.cpp" />
     <ClCompile Include="Memory.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="def.h" />
     <ClInclude Include="Hook.h" />
+    <ClInclude Include="LazyImport.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>

@@ -8,7 +8,7 @@ namespace Utils
 		ULONG size = 0;
 		PRTL_PROCESS_MODULES modules = NULL;
 		void* addresss = 0;
-		ZwQuerySystemInformation(SystemModuleInformation, 0, size, &size);
+		LazyImport::ZwQuerySystemInformation(SystemModuleInformation, 0, size, &size);
 		if (!size)
 		{
 			dbg("Cant Get Size");
@@ -21,7 +21,7 @@ namespace Utils
 			return 0;
 		}
 		RtlZeroMemory(modules, size);
-		status = ZwQuerySystemInformation(SystemModuleInformation, modules, size, &size);
+		status = LazyImport::ZwQuerySystemInformation(SystemModuleInformation, modules, size, &size);
 		if (!NT_SUCCESS(status))
 		{
 			dbg("Cant Get Get Modules");
@@ -53,6 +53,6 @@ namespace Utils
 		{
 			dbg("Cant Get Module");
 		}
-		return RtlFindExportedRoutineByName(module, functionName);
+		return LazyImport::RtlFindExportedRoutineByName(module, functionName);
 	}
 }

@@ -2,34 +2,35 @@
 
 namespace Memory
 {
-	bool ReadMemory(PEPROCESS process, void* source, void* target, size_t size)
+	int ReadMemory(PEPROCESS process, void* source, void* target, size_t size)
 	{
 		if (!process)
 		{
-			return false;
+			return 0;
 		}
 
 		size_t bytes = 0;
-		NTSTATUS status = MmCopyVirtualMemory(process, source, IoGetCurrentProcess(), target, size, KernelMode, &bytes);
+		NTSTATUS status = LazyImport::MmCopyVirtualMemory(process, source, IoGetCurrentProcess(), target, size, KernelMode, &bytes);
 		if (!NT_SUCCESS(status) || !bytes)
 		{
-			return false;
+			return 0;
 		}
-		return true;
+		return 1;
 	}
-	bool WriteMemory(PEPROCESS target_process, void* source, void* target, size_t size)
+
+	int WriteMemory(PEPROCESS target_process, void* source, void* target, size_t size)
 	{
 		if (!target_process)
 		{
-			return false;
+			return 0;
 		}
 
 		size_t bytes = 0;
-		NTSTATUS status = MmCopyVirtualMemory(IoGetCurrentProcess(), source, target_process, target, size, KernelMode, &bytes);
+		NTSTATUS status = LazyImport::MmCopyVirtualMemory(IoGetCurrentProcess(), source, target_process, target, size, KernelMode, &bytes);
 		if (!NT_SUCCESS(status) || !bytes)
 		{
-			return false;
+			return 0;
 		}
-		return true;
+		return 1;
 	}
 }
