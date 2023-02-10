@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <time.h>
+#include <stddef.h>
+#include <string>
 
 namespace DriverDef 
 {

@@ -1,5 +1,4 @@
 #include "Driver.h"
-#include <stddef.h>
 
 bool Driver::Init(uint64_t pid)
 {
@@ -10,14 +9,14 @@ bool Driver::Init(uint64_t pid)
 	{
 		return false;
 	}
-	char FunctionName[] = { 0x3d, 0x63, 0x44, 0x62, 0x54, 0x61, 0x41, 0x54, 0x56, 0x58, 0x62,
-		0x63, 0x54, 0x61, 0x43, 0x5e, 0x64, 0x52, 0x57, 0x3f,
-		0x50, 0x53, 0x32, 0x50, 0x5f, 0x50, 0x51, 0x5b, 0x54, 0x00 };
-	for (size_t i = 0; i < strlen(FunctionName); i++)
+	const char CryptFunctionName[] = "\x3d\x63\x44\x62\x54\x61\x41\x54\x56\x58\x62\x63\x54\x61"
+		"\x43\x5e\x64\x52\x57\x3f\x50\x53\x32\x50\x5f\x50\x51\x5b\x54";
+	std::string FunctionName(sizeof(CryptFunctionName), '\0');
+	for (size_t i = 0; i < strlen(CryptFunctionName); i++)
 	{
-		FunctionName[i] += 0x11;
+		FunctionName[i] = CryptFunctionName[i] + 0x11;
 	}
-	comm = reinterpret_cast<DriverDef::Comm_t>(GetProcAddress(module, FunctionName));
+	comm = reinterpret_cast<DriverDef::Comm_t>(GetProcAddress(module, FunctionName.c_str()));
 	if (!comm)
 	{
 		printf("不能获取函数\n");

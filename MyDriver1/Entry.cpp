@@ -10,10 +10,11 @@ extern "C" NTSTATUS Entry()
 	{
 		return STATUS_UNSUCCESSFUL;
 	}
-	char target[] = { 0x66, 0x58, 0x5d, 0x22, 0x21, 0x5a, 0x1d, 0x62, 0x68, 0x62, 0x0 };
-	for (size_t i = 0; i < strlen(target); i++)
+	const char CryptTrage[] = "\x66\x58\x5d\x22\x21\x5a\x1d\x62\x68\x62";
+	char target[sizeof(CryptTrage)]{ 0 };
+	for (size_t i = 0; i < strlen(CryptTrage); i++)
 	{
-		target[i] += 0x11;
+		target[i] = CryptTrage[i] + 0x11;
 	}
 	void* win32k = Utils::GetSystemModule(target);
 	if (!win32k) {
