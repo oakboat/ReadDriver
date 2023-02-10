@@ -150,13 +150,13 @@ namespace DriverDef
 
     typedef struct _WDATA
     {
-        __int64 operation;
+        uint64_t operation;
         union {
-            __int64 pid;
-            __int64 process;
+            uint64_t pid;
+            uint64_t process;
         };
-        __int64 address;
-        __int64 size;
+        uintptr_t address;
+        uint64_t size;
         void* buffer;
     }WDATA, * PWDATA;
 
@@ -174,21 +174,21 @@ public:
 	uint64_t GetModuleAddress(const wchar_t* moduleName);
     uint64_t GetModuleAddress32(const wchar_t* moduleName);
 	template<class T>
-	T Read(uint64_t address);
+	T Read(uintptr_t address);
 	template<class T>
-	bool Write(uint64_t address, T data);
-	bool ReadBuffer(uint64_t address, void* bufefr, size_t size);
-	bool WriteBuffer(uint64_t address, void* bufefr, size_t size);
+	bool Write(uintptr_t address, T data);
+	bool ReadBuffer(uintptr_t address, void* bufefr, size_t size);
+	bool WriteBuffer(uintptr_t address, void* bufefr, size_t size);
 };
 
 inline bool Driver::Call(DriverDef::PWDATA data)
 {
-    __int64 mask = ((__int64)rand() % 0xff + 0x1) << 56;
-	return comm((__int64)data | mask);
+    __int64 mask = (static_cast<__int64>(rand()) % 0xff + 0x1) << 56;
+	return comm(reinterpret_cast<__int64>(data) | mask);
 }
 
 template<class T>
-inline T Driver::Read(uint64_t address)
+inline T Driver::Read(uintptr_t address)
 {
     T buffer{ 0 };
     DriverDef::WDATA w{ 0 };
@@ -206,7 +206,7 @@ inline T Driver::Read(uint64_t address)
 }
 
 template<class T>
-inline bool Driver::Write(uint64_t address, T data)
+inline bool Driver::Write(uintptr_t address, T data)
 {
     DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::WRITE_BUFFER;

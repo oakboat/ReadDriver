@@ -4,6 +4,7 @@
 #include "Memory.h"
 #include <intrin.h>
 #include <ntifs.h>
+#include <cstdint>
 
 namespace Hook
 {
@@ -15,13 +16,13 @@ namespace Hook
 
 	typedef struct _WDATA
 	{
-		__int64 operation;
+		uint64_t operation;
 		union {
-			__int64 pid;
-			__int64 process;
+			uint64_t pid;
+			uint64_t process;
 		};
-		__int64 address;
-		__int64 size;
+		uintptr_t address;
+		uint64_t size;
 		void* buffer;
 	}WDATA, * PWDATA;
 

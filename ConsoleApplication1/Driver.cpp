@@ -37,7 +37,7 @@ bool Driver::Init(uint64_t pid)
 	return true;
 }
 
-uint64_t Driver::GetModuleAddress(const wchar_t* moduleName)
+uintptr_t Driver::GetModuleAddress(const wchar_t* moduleName)
 {
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::GET_PROCESS_PEB;
@@ -77,7 +77,7 @@ uint64_t Driver::GetModuleAddress(const wchar_t* moduleName)
 	return 0;
 }
 
-uint64_t Driver::GetModuleAddress32(const wchar_t* moduleName)
+uintptr_t Driver::GetModuleAddress32(const wchar_t* moduleName)
 {
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::GET_PROCESS_PEB32;
@@ -117,7 +117,7 @@ uint64_t Driver::GetModuleAddress32(const wchar_t* moduleName)
 	return 0;
 }
 
-bool Driver::ReadBuffer(uint64_t address, void* bufefr, size_t size)
+bool Driver::ReadBuffer(uintptr_t address, void* bufefr, size_t size)
 {
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::READ_BUFFER;
@@ -133,7 +133,7 @@ bool Driver::ReadBuffer(uint64_t address, void* bufefr, size_t size)
 	return true;
 }
 
-bool Driver::WriteBuffer(uint64_t address, void* bufefr, size_t size)
+bool Driver::WriteBuffer(uintptr_t address, void* bufefr, size_t size)
 {
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::WRITE_BUFFER;

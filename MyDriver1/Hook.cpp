@@ -41,11 +41,11 @@ namespace Hook
 		{
 		case GET_PROCESS:
 		{
-			if (!NT_SUCCESS(PsLookupProcessByProcessId((HANDLE)data->pid, &process)))
+			if (!NT_SUCCESS(PsLookupProcessByProcessId(reinterpret_cast<HANDLE>(data->pid), &process)))
 			{
 				return 0;
 			}
-			data->process = reinterpret_cast<__int64>(process);
+			data->process = reinterpret_cast<uint64_t>(process);
 			return 1;
 		}
 		break;
@@ -55,7 +55,7 @@ namespace Hook
 			{
 				return 0;
 			}
-			data->address = (__int64)LazyImport::PsGetProcessPeb(process);
+			data->address = reinterpret_cast<uintptr_t>(LazyImport::PsGetProcessPeb(process));
 			if (!data->address)
 			{
 				return 0;
@@ -70,7 +70,7 @@ namespace Hook
 			{
 				return 0;
 			}
-			data->address = (__int64)LazyImport::PsGetProcessWow64Process(process);
+			data->address = reinterpret_cast<uintptr_t>(LazyImport::PsGetProcessWow64Process(process));
 			if (!data->address)
 			{
 				return 0;
@@ -85,7 +85,7 @@ namespace Hook
 			{
 				return 0;
 			}
-			bool status = Memory::ReadMemory(process, (void*)data->address, data->buffer, data->size);
+			bool status = Memory::ReadMemory(process, reinterpret_cast<void*>(data->address), data->buffer, data->size);
 			ObReferenceObject(process);
 			return status;
 		}
@@ -96,7 +96,7 @@ namespace Hook
 			{
 				return 0;
 			}
-			bool status = Memory::WriteMemory(process, data->buffer, (void*)data->address, data->size);
+			bool status = Memory::WriteMemory(process, data->buffer, reinterpret_cast<void*>(data->address), data->size);
 			ObReferenceObject(process);
 			return status;
 		}

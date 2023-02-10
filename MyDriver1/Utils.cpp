@@ -14,7 +14,7 @@ namespace Utils
 			dbg("Cant Get Size");
 			return 0;
 		}
-		modules = (PRTL_PROCESS_MODULES)ExAllocatePool(NonPagedPool, size);
+		modules = reinterpret_cast<PRTL_PROCESS_MODULES>(ExAllocatePool(NonPagedPool, size));
 		if (!modules)
 		{
 			dbg("Cant Get Allocate Modules");
@@ -37,7 +37,7 @@ namespace Utils
 		}
 		for (ULONG i = 0; i < modules->NumberOfModules; i++)
 		{
-			if (strcmp((char*)module[i].FullPathName + module[i].OffsetToFileName, moduleName) == 0)
+			if (strcmp(reinterpret_cast<char*>(module[i].FullPathName) + module[i].OffsetToFileName, moduleName) == 0)
 			{
 				addresss = module[i].ImageBase;
 				break;
