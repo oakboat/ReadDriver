@@ -36,8 +36,13 @@ int main()
 	driver.Init(pid);
 	uint64_t address = driver.GetModuleAddress32(L"steam.exe");
 	printf("地址: %p\n", address);
+	unsigned char data[10];
+	driver.Read(address, data);
+	for (size_t i = 0; i < 10; i++)
+	{
+		printf("读取: %x\n", data[i]);
+	}
 	
-	printf("读取: %llx\n", driver.Read<uint64_t>(address));
 	//driver.Write<char>(0x11000000,0x66);
 	//getchar();
 }

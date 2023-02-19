@@ -177,8 +177,10 @@ public:
     uint64_t GetModuleAddress32(const wchar_t* moduleName);
 	template<class T>
 	T Read(uintptr_t address);
+    template<class T>
+    bool Read(uintptr_t address, T& value);
 	template<class T>
-	bool Write(uintptr_t address, T data);
+	bool Write(uintptr_t address, const T& data);
 	bool ReadBuffer(uintptr_t address, void* bufefr, size_t size);
 	bool WriteBuffer(uintptr_t address, void* bufefr, size_t size);
 };
@@ -208,7 +210,25 @@ inline T Driver::Read(uintptr_t address)
 }
 
 template<class T>
-inline bool Driver::Write(uintptr_t address, T data)
+inline bool Driver::Read(uintptr_t address, T& value)
+{
+    DriverDef::WDATA w{ 0 };
+    w.operation = DriverDef::READ_BUFFER;
+    w.process = process;
+    w.address = address;
+    w.size = sizeof(value);
+    w.buffer = &value;
+
+    if (Call(&w))
+    {
+        printf("∂¡»° ß∞‹\n");
+        return false;
+    }
+    return true;
+}
+
+template<class T>
+inline bool Driver::Write(uintptr_t address, const T& data)
 {
     DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::WRITE_BUFFER;
