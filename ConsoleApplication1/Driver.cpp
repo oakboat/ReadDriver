@@ -26,7 +26,7 @@ bool Driver::Init(uint64_t pid)
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::GET_PROCESS;
 	w.pid = pid;
-	if (!Call(&w))
+	if (Call(&w))
 	{
 		printf("设置进程失败\n");
 		return false;
@@ -41,7 +41,7 @@ uintptr_t Driver::GetModuleAddress(const wchar_t* moduleName)
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::GET_PROCESS_PEB;
 	w.process = process;
-	if (!Call(&w))
+	if (Call(&w))
 	{
 		printf("获取PEB失败\n");
 		return 0;
@@ -81,7 +81,7 @@ uintptr_t Driver::GetModuleAddress32(const wchar_t* moduleName)
 	DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::GET_PROCESS_PEB32;
 	w.process = process;
-	if (!Call(&w))
+	if (Call(&w))
 	{
 		printf("获取PEB32失败\n");
 		return 0;
@@ -124,7 +124,7 @@ bool Driver::ReadBuffer(uintptr_t address, void* bufefr, size_t size)
 	w.address = address;
 	w.size = size;
 	w.buffer = bufefr;
-	if (!Call(&w))
+	if (Call(&w))
 	{
 		printf("读取失败\n");
 		return false;
@@ -140,7 +140,7 @@ bool Driver::WriteBuffer(uintptr_t address, void* bufefr, size_t size)
 	w.address = address;
 	w.size = size;
 	w.buffer = bufefr;
-	if (!Call(&w))
+	if (Call(&w))
 	{
 		printf("写入失败\n");
 		return false;

@@ -200,7 +200,7 @@ inline T Driver::Read(uintptr_t address)
 	w.size = sizeof(buffer);
 	w.buffer = &buffer;
 
-	if (!Call(&w))
+	if (Call(&w))
 	{
         printf("∂¡»° ß∞‹\n");
 	}
@@ -216,7 +216,7 @@ inline bool Driver::Write(uintptr_t address, T data)
 	w.address = address;
 	w.size = sizeof(data);
 	w.buffer = &data;
-	if (!Call(&w))
+	if (Call(&w))
 	{
 		printf("–¥»Î ß∞‹\n");
 		return false;
