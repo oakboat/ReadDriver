@@ -42,8 +42,7 @@ int main()
 	{
 		printf("读取: %x\n", data[i]);
 	}
-	
-	//driver.Write<char>(0x11000000,0x66);
+	driver.Write(address, 666);
 	//getchar();
 }
 

@@ -180,7 +180,9 @@ public:
     template<class T>
     bool Read(uintptr_t address, T& value);
 	template<class T>
-	bool Write(uintptr_t address, const T& data);
+	bool Write(uintptr_t address, T& value);
+    template<class T>
+    bool Write(uintptr_t address, T&& value);
 	bool ReadBuffer(uintptr_t address, void* bufefr, size_t size);
 	bool WriteBuffer(uintptr_t address, void* bufefr, size_t size);
 };
@@ -228,18 +230,37 @@ inline bool Driver::Read(uintptr_t address, T& value)
 }
 
 template<class T>
-inline bool Driver::Write(uintptr_t address, const T& data)
+inline bool Driver::Write(uintptr_t address, T& value)
 {
     DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::WRITE_BUFFER;
 	w.process = process;
 	w.address = address;
-	w.size = sizeof(data);
-	w.buffer = &data;
+	w.size = sizeof(value);
+	w.buffer = &value;
+
 	if (Call(&w))
 	{
 		printf("–¥»Î ß∞‹\n");
 		return false;
 	}
 	return true;
+}
+
+template<class T>
+inline bool Driver::Write(uintptr_t address, T&& value)
+{
+    DriverDef::WDATA w{ 0 };
+    w.operation = DriverDef::WRITE_BUFFER;
+    w.process = process;
+    w.address = address;
+    w.size = sizeof(value);
+    w.buffer = &value;
+
+    if (Call(&w))
+    {
+        printf("–¥»Î ß∞‹\n");
+        return false;
+    }
+    return true;
 }
