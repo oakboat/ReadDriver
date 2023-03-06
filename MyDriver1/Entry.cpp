@@ -2,7 +2,7 @@
 #include "LazyImport.h"
 #include "Utils.h"
 #include "Hook.h"
-#include "../3rd part/skCrypter/files/skCrypter.h"
+#include "../3rd part/skCrypter/skCrypter.h"
 
 extern "C" NTSTATUS Entry()
 {
