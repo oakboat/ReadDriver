@@ -5,6 +5,7 @@
 #include <time.h>
 #include <stddef.h>
 #include <string>
+#include "../3rd part/skCrypter/files/skCrypter.h"
 
 namespace DriverDef 
 {

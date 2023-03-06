@@ -9,14 +9,9 @@ bool Driver::Init(uint64_t pid)
 	{
 		return false;
 	}
-	const char CryptFunctionName[] = "\x3d\x63\x44\x62\x54\x61\x41\x54\x56\x58\x62\x63\x54\x61"
-		"\x43\x5e\x64\x52\x57\x3f\x50\x53\x32\x50\x5f\x50\x51\x5b\x54";
-	std::string FunctionName(sizeof(CryptFunctionName), '\0');
-	for (size_t i = 0; i < strlen(CryptFunctionName); i++)
-	{
-		FunctionName[i] = CryptFunctionName[i] + 0x11;
-	}
-	comm = reinterpret_cast<DriverDef::Comm_t>(GetProcAddress(module, FunctionName.c_str()));
+	auto FunctionName = skCrypt("NtUserRegisterTouchPadCapable");
+	comm = reinterpret_cast<DriverDef::Comm_t>(GetProcAddress(module, FunctionName));
+	FunctionName.clear();
 	if (!comm)
 	{
 		printf("不能获取函数\n");

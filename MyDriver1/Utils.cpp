@@ -55,4 +55,23 @@ namespace Utils
 		}
 		return LazyImport::RtlFindExportedRoutineByName(module, functionName);
 	}
+	void* FindPattern(char* base, size_t size, const char* pattern, const char* mask)
+	{
+		size_t PatternLength = strlen(mask);
+		for (size_t i = 0; i < size - PatternLength; i++)
+		{
+			bool found = true;
+			for (size_t j = 0; j < PatternLength; j++)
+			{
+				if (mask[j] != '?' && base[i + j] != pattern[j])
+				{
+					found = false;
+				}
+			}
+			if (found)
+			{
+				return base + i;
+			}
+		}
+	}
 }
