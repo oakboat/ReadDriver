@@ -2,11 +2,11 @@
 #include "LazyImport.h"
 #include "Utils.h"
 #include "Hook.h"
-#include "../3rd part/skCrypter/skCrypter.h"
+#include "../3rd party/skCrypter/skCrypter.h"
 
 extern "C" NTSTATUS Entry()
 {
-	dbg("TEst");
+	dbg("Load Success");
 	if (!LazyImport::Init())
 	{
 		return STATUS_UNSUCCESSFUL;

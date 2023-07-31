@@ -2,11 +2,13 @@
 
 namespace Hook
 {
-	oFunction_t g_oFunction;
+	static oFunction_t oFunction = nullptr;
+	static PEPROCESS process = nullptr;
+	static uint64_t BaseAddress = 0;
 
 	NTSTATUS StartHook(void** HookAddress)
 	{
-		g_oFunction = reinterpret_cast<oFunction_t>(InterlockedExchangePointer(HookAddress, &Hook::hooked_function));
+		oFunction = reinterpret_cast<oFunction_t>(InterlockedExchangePointer(HookAddress, &Hook::hooked_function));
 		return STATUS_SUCCESS;
 	}
 
@@ -22,61 +24,48 @@ namespace Hook
 
 	__int64 Handler(__int64 _data)
 	{
-		if ((_data & 0xff00000000000000) == 0)
+		if (_data != MAGIC)
 		{
-			return g_oFunction();
+			if (_data !=0 && (_data & 0xffff000000000000) == 0 && MmIsAddressValid(reinterpret_cast<void*>(_data)))
+			{
+				dbg("Get BaseAddress");
+				BaseAddress = _data;
+			}
+			return oFunction();
 		}
-		if ((_data & 0x00ff000000000000) != 0)
-		{
-			return g_oFunction();
-		}
-		_data &= 0x0000ffffffffffff;
-		PWDATA data = reinterpret_cast<PWDATA>(_data);
+		PWDATA data = reinterpret_cast<PWDATA>(BaseAddress);
 		if (!MmIsAddressValid(data))
 		{
 			return 1;
 		}
-		PEPROCESS process = reinterpret_cast<PEPROCESS>(data->process);
 		switch (data->operation)
 		{
-		case GET_PROCESS:
+		case SET_PROCESS:
 		{
+			dbg("Set Process");
 			if (!NT_SUCCESS(PsLookupProcessByProcessId(reinterpret_cast<HANDLE>(data->pid), &process)))
 			{
 				return 1;
 			}
-			data->process = reinterpret_cast<uint64_t>(process);
-			return 0;
+			ObReferenceObject(process);
 		}
 		break;
 		case GET_PROCESS_PEB:
 		{
-			if (!data->process)
-			{
-				return 1;
-			}
 			data->address = reinterpret_cast<uintptr_t>(LazyImport::PsGetProcessPeb(process));
 			if (!data->address)
 			{
 				return 1;
 			}
-			ObReferenceObject(process);
-			return 0;
 		}
 		break;
 		case GET_PROCESS_PEB32:
 		{
-			if (!data->process)
-			{
-				return 1;
-			}
 			data->address = reinterpret_cast<uintptr_t>(LazyImport::PsGetProcessWow64Process(process));
 			if (!data->address)
 			{
 				return 1;
 			}
-			ObReferenceObject(process);
-			return 0;
 		}
 		break;
 		case READ_BUFFER:
@@ -86,7 +75,6 @@ namespace Hook
 				return 1;
 			}
 			bool status = Memory::ReadMemory(process, reinterpret_cast<void*>(data->address), data->buffer, data->size);
-			ObReferenceObject(process);
 			return !status;
 		}
 		break;
@@ -97,13 +85,13 @@ namespace Hook
 				return 1;
 			}
 			bool status = Memory::WriteMemory(process, data->buffer, reinterpret_cast<void*>(data->address), data->size);
-			ObReferenceObject(process);
 			return !status;
 		}
 		break;
 		default:
+			return 1;
 			break;
 		}
-		return 1;
+		return 0;
 	}
 }

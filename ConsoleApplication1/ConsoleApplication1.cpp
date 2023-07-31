@@ -5,7 +5,6 @@
 #include <TlHelp32.h>
 #include <chrono>
 
-
 uint64_t GetProcessId(const wchar_t * name)
 {
 	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);

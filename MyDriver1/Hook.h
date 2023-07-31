@@ -8,20 +8,20 @@
 
 namespace Hook
 {
-	constexpr auto GET_PROCESS = 1;
-	constexpr auto GET_PROCESS_PEB32 = 2;
-	constexpr auto GET_PROCESS_PEB = 3;
-	constexpr auto READ_BUFFER = 4;
-	constexpr auto WRITE_BUFFER = 5;
+	constexpr auto MAGIC = 0x52ABC;
+	constexpr auto SET_PROCESS = 1 * 0x52ABC;
+	constexpr auto GET_PROCESS_PEB32 = 2 * 0x52ABC;
+	constexpr auto GET_PROCESS_PEB = 3 * 0x52ABC;
+	constexpr auto READ_BUFFER = 4 * 0x52ABC;
+	constexpr auto WRITE_BUFFER = 5 * 0x52ABC;
 
 	typedef struct _WDATA
 	{
 		uint64_t operation;
 		union {
 			uint64_t pid;
-			uint64_t process;
+			uintptr_t address;
 		};
-		uintptr_t address;
 		uint64_t size;
 		void* buffer;
 	}WDATA, * PWDATA;
