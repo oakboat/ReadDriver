@@ -146,11 +146,12 @@ namespace DriverDef
     } LDR_DATA_TABLE_ENTRY64, * PLDR_DATA_TABLE_ENTRY64;
 
     constexpr auto MAGIC = 0x52ABC;
-    constexpr auto SET_PROCESS = 1 * 0x52ABC;
-    constexpr auto GET_PROCESS_PEB32 = 2 * 0x52ABC;
-    constexpr auto GET_PROCESS_PEB = 3 * 0x52ABC;
-    constexpr auto READ_BUFFER = 4 * 0x52ABC;
-    constexpr auto WRITE_BUFFER = 5 * 0x52ABC;
+    constexpr auto SET_PROCESS = 1 * MAGIC;
+    constexpr auto GET_PROCESS_PEB32 = 2 * MAGIC;
+    constexpr auto GET_PROCESS_PEB = 3 * MAGIC;
+    constexpr auto READ_BUFFER = 4 * MAGIC;
+    constexpr auto WRITE_BUFFER = 5 * MAGIC;
+    constexpr auto GET_BASE_ADDR = 6 * MAGIC;
 
     typedef struct _WDATA
     {
@@ -177,6 +178,7 @@ public:
 	bool Call(DriverDef::WDATA& data);
 	uint64_t GetModuleAddress(const wchar_t* moduleName);
     uint64_t GetModuleAddress32(const wchar_t* moduleName);
+    uint64_t GetProcessSectionBaseAddress();
 	template<class T>
 	T Read(uintptr_t address);
     template<class T>

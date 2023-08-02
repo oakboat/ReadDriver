@@ -94,11 +94,17 @@ namespace LazyImport
 			_In_ KPROCESSOR_MODE PreviousMode,
 			_Out_ PSIZE_T NumberOfBytesCopied
 			);
+	using PsGetProcessSectionBaseAddress_t = 
+		NTKERNELAPI
+		PVOID
+		(NTAPI*)
+		(__in PEPROCESS Process);
 	
 	extern ZwQuerySystemInformation_t ZwQuerySystemInformation;
 	extern RtlFindExportedRoutineByName_t RtlFindExportedRoutineByName;
 	extern PsGetProcessPeb_t PsGetProcessPeb;
 	extern PsGetProcessWow64Process_t PsGetProcessWow64Process;
 	extern MmCopyVirtualMemory_t MmCopyVirtualMemory;
+	extern PsGetProcessSectionBaseAddress_t PsGetProcessSectionBaseAddress;
 	int Init();
 };

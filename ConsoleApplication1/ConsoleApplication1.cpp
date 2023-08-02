@@ -33,7 +33,7 @@ int main()
 	
 	Driver driver;
 	driver.Init(pid);
-	uint64_t address = driver.GetModuleAddress32(L"steam.exe");
+	uint64_t address = driver.GetProcessSectionBaseAddress();
 	printf("地址: %p\n", address);
 	for (size_t i = 0; i < 100; i++)
 	{

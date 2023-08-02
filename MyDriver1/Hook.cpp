@@ -43,6 +43,10 @@ namespace Hook
 		case SET_PROCESS:
 		{
 			KdPrint(("Set Process"));
+			if (!data->pid)
+			{
+				return 1;
+			}
 			if (!NT_SUCCESS(PsLookupProcessByProcessId(reinterpret_cast<HANDLE>(data->pid), &process)))
 			{
 				return 1;
@@ -86,6 +90,15 @@ namespace Hook
 			}
 			bool status = Memory::WriteMemory(process, data->buffer, reinterpret_cast<void*>(data->address), data->size);
 			return !status;
+		}
+		break;
+		case GET_BASE_ADDR:
+		{
+			if (!process)
+			{
+				return 1;
+			}
+			data->address = reinterpret_cast<uintptr_t>(LazyImport::PsGetProcessSectionBaseAddress(process));
 		}
 		break;
 		default:

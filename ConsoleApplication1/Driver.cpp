@@ -115,6 +115,14 @@ uintptr_t Driver::GetModuleAddress32(const wchar_t* moduleName)
 	return 0;
 }
 
+uint64_t Driver::GetProcessSectionBaseAddress()
+{
+	DriverDef::WDATA w{ 0 };
+	w.operation = DriverDef::GET_BASE_ADDR;
+	Call(w);
+	return w.address;
+}
+
 bool Driver::ReadBuffer(uintptr_t address, void* bufefr, size_t size)
 {
 	DriverDef::WDATA w{ 0 };

@@ -7,6 +7,7 @@ namespace LazyImport
 	PsGetProcessPeb_t PsGetProcessPeb = nullptr;
 	PsGetProcessWow64Process_t PsGetProcessWow64Process = nullptr;
 	MmCopyVirtualMemory_t MmCopyVirtualMemory = nullptr;
+	PsGetProcessSectionBaseAddress_t PsGetProcessSectionBaseAddress = nullptr;
 
 	int Init()
 	{
@@ -45,6 +46,13 @@ namespace LazyImport
 		if (!MmCopyVirtualMemory)
 		{
 			KdPrint(("Error load MmCopyVirtualMemory"));
+			return 0;
+		}
+		RoutineName = RTL_CONSTANT_STRING(L"PsGetProcessSectionBaseAddress");
+		PsGetProcessSectionBaseAddress = reinterpret_cast<PsGetProcessSectionBaseAddress_t>(MmGetSystemRoutineAddress(&RoutineName));
+		if (!PsGetProcessSectionBaseAddress)
+		{
+			KdPrint(("Error load PsGetProcessSectionBaseAddress"));
 			return 0;
 		}
 		return 1;
