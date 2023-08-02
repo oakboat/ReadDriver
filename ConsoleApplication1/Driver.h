@@ -171,40 +171,42 @@ class Driver
 public:
     DriverDef::Comm_t comm = nullptr;
 	uint64_t pid = 0;
-    static DriverDef::WDATA w;
+    static DriverDef::WDATA wBuf;
     static std::mutex mtx;
 	bool Init(uint64_t pid);
-	bool Call();
+	bool Call(DriverDef::WDATA& data);
 	uint64_t GetModuleAddress(const wchar_t* moduleName);
     uint64_t GetModuleAddress32(const wchar_t* moduleName);
 	template<class T>
 	T Read(uintptr_t address);
     template<class T>
-    bool Read(uintptr_t address, T& value);
+    bool Read(uintptr_t address, T* value);
 	template<class T>
-	bool Write(uintptr_t address, T& value);
-    template<class T>
-    bool Write(uintptr_t address, T&& value);
+	bool Write(uintptr_t address, T value);
 	bool ReadBuffer(uintptr_t address, void* bufefr, size_t size);
 	bool WriteBuffer(uintptr_t address, void* bufefr, size_t size);
 };
 
-inline bool Driver::Call()
+inline bool Driver::Call(DriverDef::WDATA &data)
 {
     std::lock_guard<std::mutex> lock(mtx);
-	return comm(DriverDef::MAGIC);
+    wBuf = data;
+    bool status = !comm(DriverDef::MAGIC);
+    data = wBuf;
+    return status;
 }
 
 template<class T>
 inline T Driver::Read(uintptr_t address)
 {
+    DriverDef::WDATA w{ 0 };
     T buffer{ 0 };
 	w.operation = DriverDef::READ_BUFFER;
 	w.address = address;
 	w.size = sizeof(buffer);
 	w.buffer = &buffer;
 
-	if (Call())
+	if (!Call(w))
 	{
         printf("∂¡»° ß∞‹\n");
 	}
@@ -212,13 +214,15 @@ inline T Driver::Read(uintptr_t address)
 }
 
 template<class T>
-inline bool Driver::Read(uintptr_t address, T& value)
+inline bool Driver::Read(uintptr_t address, T* value)
 {
+    DriverDef::WDATA w{ 0 };
+    w.operation = DriverDef::READ_BUFFER;
     w.address = address;
-    w.size = sizeof(value);
-    w.buffer = &value;
+    w.size = sizeof(T);
+    w.buffer = value;
 
-    if (Call())
+    if (!Call(w))
     {
         printf("∂¡»° ß∞‹\n");
         return false;
@@ -227,33 +231,18 @@ inline bool Driver::Read(uintptr_t address, T& value)
 }
 
 template<class T>
-inline bool Driver::Write(uintptr_t address, T& value)
+inline bool Driver::Write(uintptr_t address, T value)
 {
+    DriverDef::WDATA w{ 0 };
 	w.operation = DriverDef::WRITE_BUFFER;
 	w.address = address;
 	w.size = sizeof(value);
 	w.buffer = &value;
 
-	if (Call())
+	if (!Call(w))
 	{
 		printf("–¥»Î ß∞‹\n");
 		return false;
 	}
 	return true;
-}
-
-template<class T>
-inline bool Driver::Write(uintptr_t address, T&& value)
-{
-    w.operation = DriverDef::WRITE_BUFFER;
-    w.address = address;
-    w.size = sizeof(value);
-    w.buffer = &value;
-
-    if (Call())
-    {
-        printf("–¥»Î ß∞‹\n");
-        return false;
-    }
-    return true;
 }

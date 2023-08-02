@@ -1,5 +1,4 @@
 #pragma once
-#include "def.h"
 #include "LazyImport.h"
 
 namespace Memory

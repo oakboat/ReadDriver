@@ -28,7 +28,7 @@ namespace Hook
 		{
 			if (_data !=0 && (_data & 0xffff000000000000) == 0 && MmIsAddressValid(reinterpret_cast<void*>(_data)))
 			{
-				dbg("Get BaseAddress");
+				KdPrint(("Get BaseAddress"));
 				BaseAddress = _data;
 			}
 			return oFunction();
@@ -42,7 +42,7 @@ namespace Hook
 		{
 		case SET_PROCESS:
 		{
-			dbg("Set Process");
+			KdPrint(("Set Process"));
 			if (!NT_SUCCESS(PsLookupProcessByProcessId(reinterpret_cast<HANDLE>(data->pid), &process)))
 			{
 				return 1;

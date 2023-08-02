@@ -39,9 +39,6 @@
     <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="def.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Hook.h">
       <Filter>Header Files</Filter>
     </ClInclude>

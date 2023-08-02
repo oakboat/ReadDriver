@@ -15,14 +15,14 @@ namespace LazyImport
 		ZwQuerySystemInformation = reinterpret_cast<ZwQuerySystemInformation_t>(MmGetSystemRoutineAddress(&RoutineName));
 		if (!ZwQuerySystemInformation)
 		{
-			dbg("Error load ZwQuerySystemInformation");
+			KdPrint(("Error load ZwQuerySystemInformation"));
 			return 0;
 		}
 		RoutineName = RTL_CONSTANT_STRING(L"RtlFindExportedRoutineByName");
 		RtlFindExportedRoutineByName = reinterpret_cast<RtlFindExportedRoutineByName_t>(MmGetSystemRoutineAddress(&RoutineName));
 		if (!RtlFindExportedRoutineByName)
 		{
-			dbg("Error load RtlFindExportedRoutineByName");
+			KdPrint(("Error load RtlFindExportedRoutineByName"));
 			return 0;
 		}
 
@@ -30,21 +30,21 @@ namespace LazyImport
 		PsGetProcessPeb = reinterpret_cast<PsGetProcessPeb_t>(MmGetSystemRoutineAddress(&RoutineName));
 		if (!PsGetProcessPeb)
 		{
-			dbg("Error load PsGetProcessPeb");
+			KdPrint(("Error load PsGetProcessPeb"));
 			return 0;
 		}
 		RoutineName = RTL_CONSTANT_STRING(L"PsGetProcessWow64Process");
 		PsGetProcessWow64Process = reinterpret_cast<PsGetProcessWow64Process_t>(MmGetSystemRoutineAddress(&RoutineName));
 		if (!PsGetProcessWow64Process)
 		{
-			dbg("Error load PsGetProcessWow64Process");
+			KdPrint(("Error load PsGetProcessWow64Process"));
 			return 0;
 		}
 		RoutineName = RTL_CONSTANT_STRING(L"MmCopyVirtualMemory");
 		MmCopyVirtualMemory = reinterpret_cast<MmCopyVirtualMemory_t>(MmGetSystemRoutineAddress(&RoutineName));
 		if (!MmCopyVirtualMemory)
 		{
-			dbg("Error load MmCopyVirtualMemory");
+			KdPrint(("Error load MmCopyVirtualMemory"));
 			return 0;
 		}
 		return 1;

@@ -113,7 +113,6 @@
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="def.h" />
     <ClInclude Include="Hook.h" />
     <ClInclude Include="LazyImport.h" />
     <ClInclude Include="Memory.h" />

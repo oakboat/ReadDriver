@@ -1,6 +1,5 @@
 #pragma once
 #include <ntifs.h>
-#include "def.h"
 
 typedef enum _SYSTEM_INFORMATION_CLASS
 {

@@ -11,27 +11,27 @@ namespace Utils
 		LazyImport::ZwQuerySystemInformation(SystemModuleInformation, 0, size, &size);
 		if (!size)
 		{
-			dbg("Cant Get Size");
+			KdPrint(("Cant Get Size"));
 			return 0;
 		}
 		modules = reinterpret_cast<PRTL_PROCESS_MODULES>(ExAllocatePool(NonPagedPool, size));
 		if (!modules)
 		{
-			dbg("Cant Get Allocate Modules");
+			KdPrint(("Cant Get Allocate Modules"));
 			return 0;
 		}
 		RtlZeroMemory(modules, size);
 		status = LazyImport::ZwQuerySystemInformation(SystemModuleInformation, modules, size, &size);
 		if (!NT_SUCCESS(status))
 		{
-			dbg("Cant Get Get Modules");
+			KdPrint(("Cant Get Get Modules"));
 			ExFreePool(modules);
 			return 0;
 		}
 		PRTL_PROCESS_MODULE_INFORMATION module = modules->Modules;
 		if (!module)
 		{
-			dbg("Cant Get Get Module");
+			KdPrint(("Cant Get Get Module"));
 			ExFreePool(modules);
 			return 0;
 		}
@@ -51,7 +51,7 @@ namespace Utils
 		void* module = GetSystemModule(moduleName);
 		if (!module)
 		{
-			dbg("Cant Get Module");
+			KdPrint(("Cant Get Module"));
 		}
 		return LazyImport::RtlFindExportedRoutineByName(module, functionName);
 	}

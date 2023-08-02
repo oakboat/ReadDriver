@@ -1,4 +1,3 @@
-#include "def.h"
 #include "LazyImport.h"
 #include "Utils.h"
 #include "Hook.h"
@@ -6,7 +5,7 @@
 
 extern "C" NTSTATUS Entry()
 {
-	dbg("Load Success");
+	KdPrint(("Load Success"));
 	if (!LazyImport::Init())
 	{
 		return STATUS_UNSUCCESSFUL;
@@ -15,7 +14,7 @@ extern "C" NTSTATUS Entry()
 	auto target = skCrypt("win32k.sys");
 	void* win32k = Utils::GetSystemModule(target);
 	if (!win32k) {
-		dbg("win32k not found!");
+		KdPrint(("win32k not found!"));
 		return STATUS_FAILED_DRIVER_ENTRY;
 	}
 	target.clear();
