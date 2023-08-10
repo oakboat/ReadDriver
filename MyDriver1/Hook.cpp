@@ -51,7 +51,7 @@ namespace Hook
 			{
 				return 1;
 			}
-			ObReferenceObject(process);
+			ObDereferenceObject(process);
 		}
 		break;
 		case GET_PROCESS_PEB:
