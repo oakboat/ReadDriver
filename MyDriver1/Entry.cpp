@@ -18,6 +18,8 @@ extern "C" NTSTATUS Entry()
 		return STATUS_FAILED_DRIVER_ENTRY;
 	}
 	target.clear();
+	
+	//NtUserRegisterTouchPadCapable
 	uintptr_t HookAddress = reinterpret_cast<uintptr_t>(win32k)+0x664E0;
 	return Hook::StartHook(reinterpret_cast<void**>(HookAddress));
 }
